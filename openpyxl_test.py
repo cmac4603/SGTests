@@ -1,6 +1,12 @@
-import csv
+from datetime import date
+from openpyxl import load_workbook
 
-with open('CSV Test Sheet.csv', newline='') as test:
-    testreader = csv.reader(test, delimiter=',', quotechar='|')
-    for row in testreader:
-        print(' '.join(row))
+today = date.today()
+
+wb = load_workbook('CSV Test Sheet.xlsx')
+
+ws2 = wb.get_sheet_by_name("Left")
+ws3 = wb.get_sheet_by_name("Right")
+
+print(ws2)
+print(ws3)
