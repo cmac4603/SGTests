@@ -46,7 +46,7 @@ def quit_program(channel):
 
 
 def start():
-    print('Sleeve Gun Tester v1.0 2015')
+    print('Sleeve Gun Tester v.0 2015')
     print('Press the green button for voltage, current, and resistance...')
     print('Or the red button to quit at anytime.')
     GPIO.add_event_detect(EXIT_BUTTON, GPIO.FALLING, callback=quit_program)

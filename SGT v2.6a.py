@@ -16,7 +16,7 @@ Sws = wb.get_sheet_by_name("Stbd")
 
 i2c_helper = ABEHelpers()
 bus = i2c_helper.get_smbus()
-adc = ADCPi(bus, 0x68, 0x69, 12)
+adc = ADCPi(bus, 0x68, 0x69, 18)
 
 # Configure the GPIO pins
 BUTTON1 = 5
@@ -33,22 +33,20 @@ GPIO.setup(BUTTON4, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(EXIT_BUTTON, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(END_BUTTON, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-# voltage reading from channel 1 (v_supply) / 2, used for calccurrent()
-v_i = (adc.read_voltage(1)) /2
 # voltage reading from channel 1 (v_supply), used for calccurrent()
-v1 = (adc.read_voltage(1))
+v = 3.3
 
 # calculates current from channel labelled 'v_i'
 # i = current calculated from adc channel 1 defined globally
-def calccurrent(inval):
+def calcCurrent(inval):
     global i
-    i = ((inval) - v_i) / 0.066
-    return ((inval) - v_i) / 0.066
+    i = ((inval) - 1.65) / 0.066
+    return ((inval) - 1.65) / 0.066
     
 # calculates resistance using two global variables
 # voltage(V)/current(mA) = r
-def calcresistance(volts):
-    return volts / (i / 1000)
+def calcresistance():
+    return v / i
 
 def pre_exit(channel):
     print('Exit button pressed, quiting program...')
@@ -74,36 +72,32 @@ def start():
         print('Attach banana plugs to firing line 1 for port guns')
         print('Press green button to record resistance')
         GPIO.wait_for_edge(BUTTON1, GPIO.FALLING)
-        adc.read_voltage(1)
-        calccurrent(v1)
-        Pws['F37'] = calcresistance(v1)
+        calcCurrent(adc.read_voltage(1))
+        Pws['F37'] = calcresistance()
         print('Solenoid resistance recorded')
         time.sleep(1)
         # write resistance from S2 to cell
         print('Attach banana plugs to firing line 2 for port guns')
         print('Press green button to record resistance')
         GPIO.wait_for_edge(BUTTON2, GPIO.FALLING)
-        adc.read_voltage(1)
-        calccurrent(v1)
-        Pws['F38'] = calcresistance(v1)
+        calcCurrent(adc.read_voltage(1))
+        Pws['F38'] = calcresistance()
         print('Solenoid resistance recorded')
         time.sleep(1)
         # write resistance from S3 to cell
         print('Attach banana plugs to firing line 3 for port guns')
         print('Press green button to record resistance')
         GPIO.wait_for_edge(BUTTON3, GPIO.FALLING)
-        adc.read_voltage(1)
-        calccurrent(v1)
-        Pws['F39'] = calcresistance(v1)
+        calcCurrent(adc.read_voltage(1))
+        Pws['F39'] = calcresistance()
         print('Solenoid resistance recorded')
         time.sleep(1)
         # write resistance from S4 to cell
         print('Attach banana plugs to firing line 4 for port guns')
         print('Press green button to record resistance')
         GPIO.wait_for_edge(BUTTON4, GPIO.FALLING)
-        adc.read_voltage(1)
-        calccurrent(v1)
-        Pws['F40'] = calcresistance(v1)
+        calcCurrent(adc.read_voltage(1))
+        Pws['F40'] = calcresistance()
         print('Solenoid resistance recorded')
         time.sleep(1)
     finally:
