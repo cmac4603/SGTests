@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 
 from datetime import date
 from openpyxl import load_workbook
@@ -33,8 +33,6 @@ GPIO.setup(BUTTON4, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(EXIT_BUTTON, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(END_BUTTON, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-# voltage reading from channel 1 (v_supply) / 2, used for calccurrent()
-v_i = (adc.read_voltage(1)) /2
 # voltage reading from channel 1 (v_supply), used for calccurrent()
 v1 = (adc.read_voltage(1))
 
@@ -42,13 +40,13 @@ v1 = (adc.read_voltage(1))
 # i = current calculated from adc channel 1 defined globally
 def calccurrent(inval):
     global i
-    i = ((inval) - v_i) / 0.066
-    return ((inval) - v_i) / 0.066
+    i = ((inval) - 1.65) / 0.066
+    return ((inval) - 1.65) / 0.066
     
 # calculates resistance using two global variables
 # voltage(V)/current(mA) = r
 def calcresistance(volts):
-    return volts / (i / 1000)
+    return volts / float(i)
 
 def pre_exit(channel):
     print('Exit button pressed, quiting program...')
@@ -66,7 +64,7 @@ def quit_program():
 
 def start():
     os.system('clear')
-    print('Sleeve Gun Tester v2.1 2015')
+    print('Sleeve Gun Tester v2.3.1 2015')
     print('Note you can press the red button anytime to quit')
     GPIO.add_event_detect(EXIT_BUTTON, GPIO.FALLING, callback=pre_exit)
     try:
@@ -74,8 +72,8 @@ def start():
         print('Attach banana plugs to firing line 1 for port guns')
         print('Press green button to record resistance')
         GPIO.wait_for_edge(BUTTON1, GPIO.FALLING)
-        adc.read_voltage(1)
-        calccurrent(v1)
+        print(adc.read_voltage(1))
+        print(calccurrent(v1))
         Pws['F37'] = calcresistance(v1)
         print('Solenoid resistance recorded')
         time.sleep(1)

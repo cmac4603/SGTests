@@ -2,4 +2,11 @@ Resistance checks, acceptable values:
 Solenoid: 5 - 10 ohms
 Timing Coil: 18 - 23 ohms
 
+SGTester Versions
+SGT v1.0: Template(py3)
+SGT v2.0: Working copy(py3)
+SGT v2.1: More refined(py3)
+SGT v2.2.2: Adapted for python 2
+SGT v2.6a: Using fixed voltage value(py3)
+
 
